@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstring>
+#include <errno.h>
 
 
 
@@ -9,19 +11,46 @@ void putHeader(FILE* numfile, char* header);
 
 int main(){
     
+    char filename[200] = "";
+    char header[50] = "";
     FILE* numfile = fopen("numline", "w");
-    FILE* parsedFile = fopen("/home/zakhar/Programs/www.unicode.org/Public/UCD/latest/ucd/DerivedCoreProperties.txt", "r");
-    if( (parsedFile == NULL) || (numfile == NULL) ) {
-        printf("file open error\n");
-        exit(1);
-    }
+    FILE* parsedFile = NULL;     
 
-    char header[30] = "";
+
+    printf("Enter filename or \"exit\" to exit:\t");
+    scanf("%s", filename);
+
+    //fgets(filename, 200, stdin);
+
+    while( strcmp(filename, "exit") != 0 ){
+        printf("%s", filename);
+        parsedFile = fopen(filename, "r");
+
+
+        if( (parsedFile == NULL) || (numfile == NULL) ) {
+            printf("\nfile open error: [%d]\n", errno);
+            exit(1);
+        }
+        
+/*      while( parseLine(parsedFile, numfile) != 1 );
+
+        fprintf(parsedFile, "\n");
+
+        fprintf(parsedFile, "text"); */
+
+        while( getHeader(parsedFile, header) != 1 ){
+
+            putHeader(numfile, header);
+           
+            while( parseLine(parsedFile, numfile) != 1 );
+
+            fprintf(numfile, "\n");
+        }
     
-    getHeader(parsedFile, header); 
-    putHeader(numfile, header);
-    
-    while( parseLine(parsedFile, numfile) != 1 );
+        printf("\nEnter filename or \"exit\" to exit:\t");
+        scanf("%s", filename); 
+
+    } 
 
     return 0;
 }
@@ -54,11 +83,21 @@ int getHeader(FILE* parsedFile, char* header){
 
     while( fgetc(parsedFile) != '\n' ){};
     fgetc(parsedFile);
-    fseek(parsedFile, 20, SEEK_CUR);
-    fgets(header, 30 + 1, parsedFile);
+
+    while( fgetc(parsedFile) != ':' );
+    while( fgetc(parsedFile) == ' ' );
+    fseek(parsedFile, -1, SEEK_CUR);
     
-    while( fgetc(parsedFile) != '\n' ){}
-    fgetc(parsedFile);
+
+    fgets(header, 50 + 1, parsedFile);
+    
+    bool comEnd = false;
+
+    while( comEnd == false ){
+        while( fgetc(parsedFile) != '\n' );
+        if( fgetc(parsedFile) != '#' ) comEnd=true;
+    }
+
 
     return 0;
 }

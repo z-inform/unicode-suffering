@@ -9,8 +9,8 @@ int getLen(FILE* numfile){
         if( readchar == ' ' ) count++;
         readchar = fgetc(numfile);
     }
+    fseek(numfile, 0, SEEK_SET);
     return count;
-    fseek(numfile, 0, SEEK_CUR);
 }
 
 

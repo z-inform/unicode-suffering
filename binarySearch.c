@@ -6,12 +6,13 @@
 #include <sys/stat.h>
 
 int binarySearch(FILE* numfile, int len, unsigned int svalue);
+int getLen(FILE* numfile);
 
 int main(){
 
     int count = 0;
 
-    FILE* numfile = fopen("/home/zakhar/diy_isalpha/testbin", "rb");
+    FILE* numfile = fopen("/home/zakhar/diy_isalpha/ucd/Uppercase", "rb");
 
     //struct stat fstats = {0};
     //stat("/home/zakhar/diy_isalpha/testbin", &fstats);
@@ -36,6 +37,20 @@ int main(){
     return 0;
 }
 
+int getLen(FILE* numfile){
+    int count = 0;
+    fseek(numfile, 0, SEEK_CUR);
+    int readchar = fgetc(numfile);
+    while( readchar != EOF ){
+        if( readchar == ' ' ) count++;
+        readchar = fgetc(numfile);
+    }
+    return count;
+    fseek(numfile, 0, SEEK_CUR);
+}
+
+
+
 int binarySearch(FILE* numfile, int len, unsigned int svalue){
     
     int low = 0;
@@ -43,7 +58,19 @@ int binarySearch(FILE* numfile, int len, unsigned int svalue){
     int middle = 0;
     unsigned int mvalue = 0;
 
-    while( (high - low) >= 1 ){
+    fseek(numfile, 0, SEEK_SET);
+    fscanf(numfile, "%x", &mvalue);
+    if( mvalue == svalue ) return 1;
+
+    fseek(numfile, -4, SEEK_END);
+    fscanf(numfile, "%x", &mvalue);
+    if( mvalue == svalue ) return 1;
+
+    fseek(numfile, -4, SEEK_END);
+
+
+
+    while( (high - low) > 1 ){
         middle = (low + high) / 2;
         printf("mid coord: %d\n", middle);
 

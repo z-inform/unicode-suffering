@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <errno.h>
+#include <cassert>
 
 
 
@@ -12,48 +13,47 @@ void putHeader(FILE* numfile, char* header);
 int main(){
     
     char filename[200] = "";
-    char header[50] = "";
-    FILE* numfile = fopen("numline", "w");
+    char* header = (char*) calloc(50, sizeof(char));
+    char path[70] = "/home/zakhar/diy_isalpha/ucd/";
+    char* fullpath = (char*) calloc(70, sizeof(char));;
+    FILE* numfile = NULL;
     FILE* parsedFile = NULL;     
 
 
-    printf("Enter filename or \"exit\" to exit:\t");
     scanf("%s", filename);
 
-    //fgets(filename, 200, stdin);
-
-    while( strcmp(filename, "exit") != 0 ){
-        printf("%s", filename);
-        parsedFile = fopen(filename, "r");
+    printf("\nfile name: %s\n", filename);
+    parsedFile = fopen(filename, "r");
 
 
-        if( (parsedFile == NULL) || (numfile == NULL) ) {
-            printf("\nfile open error: [%d]\n", errno);
-            exit(1);
-        }
-        
-/*      while( parseLine(parsedFile, numfile) != 1 );
-
-        fprintf(parsedFile, "\n");
-
-        fprintf(parsedFile, "text"); */
-
-        while( getHeader(parsedFile, header) != 1 ){
-
-            putHeader(numfile, header);
-           
-            while( parseLine(parsedFile, numfile) != 1 );
-
-            fprintf(numfile, "\n");
-        }
+    if( parsedFile == NULL ) {
+        printf("\nfile open error: [%d]\n", errno);
+        exit(1);
+    }
     
-        printf("\nEnter filename or \"exit\" to exit:\t");
-        scanf("%s", filename); 
 
-    } 
+    while( getHeader(parsedFile, header) != 1 ){
+        
+        int i = 0;
+        for(; path[i] != '\0'; i++ ) fullpath[i] = path[i];
+        fullpath[i] = '\0';
+
+        fullpath = strcat(fullpath, header);
+        printf("newfile: %s\n", fullpath);
+
+        numfile = fopen(fullpath, "w");
+        assert( numfile != NULL );
+
+        while( parseLine(parsedFile, numfile) != 1 );
+
+        fclose(numfile);
+    }
+
+
 
     return 0;
 }
+
 
 void putHeader(FILE* numfile, char* header){
     
@@ -88,9 +88,18 @@ int getHeader(FILE* parsedFile, char* header){
     while( fgetc(parsedFile) == ' ' );
     fseek(parsedFile, -1, SEEK_CUR);
     
+    readch = fgetc(parsedFile);
 
-    fgets(header, 50 + 1, parsedFile);
+    int i = 0;
     
+    while( (readch != EOF) && (readch != '\n') && (readch != ' ') ){
+        header[i] = readch;
+        i++;
+        readch = fgetc(parsedFile);
+    }
+
+    header[i] = '\0';
+
     bool comEnd = false;
 
     while( comEnd == false ){

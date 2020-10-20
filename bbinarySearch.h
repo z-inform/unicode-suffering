@@ -8,6 +8,7 @@
 
 int binarySearch(unsigned int* arr, int len, unsigned int svalue);
 int getLen(FILE* numfile);
+int disalpha(unsigned int ch);
 
 int getLen(FILE* numfile){
     int count = 0;
@@ -21,6 +22,22 @@ int getLen(FILE* numfile){
     return count;
 }
 
+
+int disalpha(unsigned int ch){
+    static FILE* datafile;
+    static int len;
+    static unsigned int* arr;
+    if( datafile == NULL ){
+        datafile = fopen("Alphabetic", "r");
+        len = getLen(datafile);
+        arr = (unsigned int*) calloc(len, sizeof(unsigned int));
+        for(int i = 0; i < len; i++) fscanf(datafile, "%x", &arr[i]);
+    }
+    
+    return binarySearch(arr, len, ch);
+
+
+}
 
 
 int binarySearch(unsigned int* arr, int len, unsigned int svalue){

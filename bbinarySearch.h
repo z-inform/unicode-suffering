@@ -1,10 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include <cassert>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
 
 int binarySearch(unsigned int* arr, int len, unsigned int svalue);
 int getLen(FILE* numfile);
@@ -59,9 +54,6 @@ int binarySearch(unsigned int* arr, int len, unsigned int svalue){
         if( svalue == mvalue ) return 1;
         else if( svalue < mvalue ) high = middle;
         else low = middle;
-
-        assert( low >= 0 );
-        assert( high <= len );
 
     }
         

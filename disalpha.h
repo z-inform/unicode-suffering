@@ -42,6 +42,8 @@ int binarySearch(unsigned int* arr, int len, unsigned int svalue){
     int middle = 0;
     unsigned int mvalue = 0;
 
+    if( (svalue < arr[0]) || (svalue > arr[len]) ) return 0;
+
     if( arr[0] == svalue ) return 1;
 
     if( arr[len] == svalue ) return 1;

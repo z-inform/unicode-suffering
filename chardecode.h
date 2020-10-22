@@ -1,11 +1,46 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <locale.h>
+#include <math.h>
 
 
-int rchar(FILE* fp, int byte);
+int decodeChar(FILE* fp, int byte);
 
-int rchar(FILE* fp, int byte){
+int encodeChar(unsigned int point);
+
+int encodeChar(unsigned int point){
+
+    int count = (log(point) / log(2) + 1);
+    int chcode = 0;
+    
+    if( count <= 7 ){
+        chcode = point;
+    }
+    else if( count <= 11 ){
+        chcode = 0xC080;
+        chcode = chcode | (point & 0x3F);
+        chcode = chcode | ( (point & 0x7C0) << 2 ); 
+    }
+    else if( count <= 16 ){ 
+        chcode = 0xE08080;
+        chcode = chcode | (point & 0x3F);
+        chcode = chcode | ( (point & 0x7C0) << 2 );
+        chcode = chcode | ( (point & 0xF000) << 4 );
+    }
+    else if( count <= 21 ){ 
+        chcode = 0xF0808080; 
+        chcode = chcode | (point & 0x3F);
+        chcode = chcode | ( (point & 0x7C0) << 2 );
+        chcode = chcode | ( (point & 0x3F000) << 4 );
+        chcode = chcode | ( (point & 0x1C0000) << 6 );
+    }
+    else return -1;
+
+
+    return chcode;
+}
+
+
+int decodeChar(FILE* fp, int byte){
     
     int chcode = 0;
     char count = 0;

@@ -38,13 +38,16 @@ int disalpha(unsigned int ch){
 int binarySearch(unsigned int* arr, int len, unsigned int svalue){
     
     int low = 0;
-    int high = len;
+    int high = len-1;
     int middle = 0;
     unsigned int mvalue = 0;
 
+    if( (svalue < arr[0]) && (svalue > arr[len-1]) ) return 0;
+
     if( arr[0] == svalue ) return 1;
 
-    if( arr[len] == svalue ) return 1;
+    if( arr[len-1] == svalue ) return 1;
+    printf("began binary search\n");
 
 
     while( (high - low) > 1 ){

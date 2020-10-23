@@ -47,8 +47,6 @@ int binarySearch(unsigned int* arr, int len, unsigned int svalue){
     if( arr[0] == svalue ) return 1;
 
     if( arr[len-1] == svalue ) return 1;
-    printf("began binary search\n");
-
 
     while( (high - low) > 1 ){
         middle = (low + high) / 2;

@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <ctype.h>
 #include <math.h>
@@ -9,7 +10,7 @@ int encodeChar(unsigned int point);
 
 int encodeChar(unsigned int point){
 
-    int count = (log(point) / log(2) + 1);
+    int count = (int) (log(point) / log(2) + 1);
     int chcode = 0;
     
     if( count <= 7 ){

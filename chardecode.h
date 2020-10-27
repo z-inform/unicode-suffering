@@ -8,6 +8,17 @@ int decodeChar(FILE* fp, int byte);
 
 int encodeChar(unsigned int point);
 
+void putChar(FILE* resFile, unsigned int unicodeChar);
+
+void putChar(FILE* resFile, unsigned int unicodeChar){
+    for(int move = 0; (move < 4); move++){
+        unsigned int pointChar = (encodeChar(unicodeChar) << move * 8) >> 3*8;
+        if( pointChar != 0x0 )  fputc(pointChar, resFile);
+    }
+
+}
+
+
 int encodeChar(unsigned int point){
 
     int count = (int) (log(point) / log(2) + 1);

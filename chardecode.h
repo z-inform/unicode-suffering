@@ -1,25 +1,25 @@
 #pragma once
+#include <stdint.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <math.h>
 
 
-int decodeChar(FILE* fp, int byte);
+int32_t decodeChar(FILE* fp, int32_t byte);
 
-int encodeChar(unsigned int point);
+int32_t encodeChar(uint32_t point);
 
-void putChar(FILE* resFile, unsigned int unicodeChar);
+void putChar(FILE* resFile, uint32_t unicodeChar);
 
-void putChar(FILE* resFile, unsigned int unicodeChar){
+void putChar(FILE* resFile, uint32_t unicodeChar){
     for(int move = 0; (move < 4); move++){
-        unsigned int pointChar = (encodeChar(unicodeChar) << move * 8) >> 3*8;
+        uint32_t pointChar = (encodeChar(unicodeChar) << move * 8) >> 3*8;
         if( pointChar != 0x0 )  fputc(pointChar, resFile);
     }
 
 }
 
 
-int encodeChar(unsigned int point){
+int32_t encodeChar(uint32_t point){
 
     int count = (int) (log(point) / log(2) + 1);
     int chcode = 0;
@@ -52,9 +52,9 @@ int encodeChar(unsigned int point){
 }
 
 
-int decodeChar(FILE* fp, int byte){
+int32_t decodeChar(FILE* fp, int32_t byte){
     
-    int chcode = 0;
+    int32_t chcode = 0;
     char count = 0;
 
 if( (byte & 0x80) == 0 ){

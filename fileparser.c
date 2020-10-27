@@ -1,9 +1,9 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <cstring>
 #include <errno.h>
 #include <cassert>
-
 
 
 int getHeader(FILE* parsedFile, char* header);
@@ -113,8 +113,8 @@ int getHeader(FILE* parsedFile, char* header){
 
 int parseLine(FILE* parsedFile, FILE* numfile){
 
-    unsigned int codePoint = 0;
-    unsigned int rCodePoint = 0; // second codepoint if defined as range
+    uint32_t codePoint = 0;
+    uint32_t rCodePoint = 0; // second codepoint if defined as range
     bool rangeFlag = false;
 
     if( fscanf(parsedFile, "%x", &codePoint) == 0 ) return 1;
@@ -129,7 +129,7 @@ int parseLine(FILE* parsedFile, FILE* numfile){
             fprintf(numfile, "%x ", codePoint);
         }
         else{
-            for( unsigned int i = codePoint; i <= rCodePoint; i++){
+            for( uint32_t i = codePoint; i <= rCodePoint; i++){
                 fprintf(numfile, "%x ", i);
             }
         }

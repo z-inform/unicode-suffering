@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 int binarySearch(unsigned int* arr, int len, unsigned int svalue);
 int getLen(FILE* numfile);
